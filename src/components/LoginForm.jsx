@@ -1,15 +1,18 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const LoginForm = (props) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   const onSubmit = (event) => {
     event.preventDefault()
     props.onLogin({ username, password })
     setUsername('')
     setPassword('')
+    navigate("/notes")
   }
 
   return <form onSubmit={onSubmit} >

@@ -39,7 +39,10 @@ const App = () => {
       <div>
         <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/notes">notes</Link>
-        <Link style={padding} to="/login">login</Link>
+        {user
+          ? <em>{user.username} logged in</em>
+          : <Link style={padding} to="/login">login</Link>
+        }
       </div>
 
       <Routes>
