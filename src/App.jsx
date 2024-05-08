@@ -3,6 +3,10 @@ import { useState, useEffect } from "react"
 import loginService from './services/login'
 import noteService from './services/noteService'
 import LoginForm from "./components/LoginForm"
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from "react-router-dom"
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -28,19 +32,22 @@ const App = () => {
     }
   }
 
+
+  const padding = { padding: 5 }
   return (
-    <div>
-      <h1>Notes</h1>
+    <Router>
+      <div>
+        <Link style={padding} to="/">home</Link>
+        <Link style={padding} to="/notes">notes</Link>
+        <Link style={padding} to="/login">login</Link>
+      </div>
 
-      {user === null ?
-        <LoginForm onLogin={handleLogin} /> :
-        <div>
-          <p>{user.name} logged-in</p>
-          <Notes />
-        </div>
-      }
-
-    </div>
+      <Routes>
+        <Route path="/notes" element={<Notes />} />
+        <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
+        <Route path="/" element={<div><p>Welcome!</p></div>} />
+      </Routes>
+    </Router>
   )
 }
 
