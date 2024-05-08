@@ -5,7 +5,8 @@ import noteService from './services/noteService'
 import LoginForm from "./components/LoginForm"
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route, Link,
+  Navigate
 } from "react-router-dom"
 
 const App = () => {
@@ -46,7 +47,7 @@ const App = () => {
       </div>
 
       <Routes>
-        <Route path="/notes" element={<Notes />} />
+        <Route path="/notes" element={user ? <Notes /> : <Navigate replace to="/login" />} />
         <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
         <Route path="/" element={<div><p>Welcome!</p></div>} />
       </Routes>
