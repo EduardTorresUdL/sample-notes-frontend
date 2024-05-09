@@ -1,36 +1,30 @@
-import { useState, useEffect } from "react"
-import noteService from '../services/noteService'
+import { useState } from "react"
+import { Link, useParams } from "react-router-dom"
 
 
-const Notes = () => {
-  const [notes, setNotes] = useState([])
-
-  useEffect(() => {
-    noteService
-      .getAll().then(initialNotes => setNotes(initialNotes))
-  }, [])
-
-  const addNote = (note) => {
-    const noteObject = {
-      content: note.content,
-      important: Math.random() < 0.5,
-      id: notes.length + 1,
-    }
-    noteService.create(noteObject)
-      .then(response => setNotes(notes.concat(response)))
-  }
-
+const Notes = (props) => {
   return <div>
     <ul>
-      {notes.map(note => <Note key={note.id} note={note} />)}
+      {props.notes.map(note =>
+        <li key={note.id}>
+          <Link to={`/notes/${note.id}`}>{note.content}</Link>
+        </li>
+      )}
     </ul>
 
-    <NoteForm onAddNote={addNote} />
+    <NoteForm onAddNote={props.onAddNote} />
   </div>
 }
 
-const Note = ({ note }) => {
-  return <li>{note.content}</li>
+const Note = ({ notes }) => {
+  const id = useParams().id
+  const note = notes.find(n => n.id === Number(id))
+  return (
+    <div>
+      <h2>{note.content}</h2>
+      <div><strong>{note.important ? "important" : ""}</strong></div>
+    </div>
+  )
 }
 
 const NoteForm = (props) => {
@@ -51,4 +45,4 @@ const NoteForm = (props) => {
   </form>
 }
 
-export default Notes
+export { Notes, Note }

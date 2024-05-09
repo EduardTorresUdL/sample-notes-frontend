@@ -1,4 +1,4 @@
-import Notes from "./components/Notes"
+import { Notes, Note } from "./components/Notes"
 import { useState, useEffect } from "react"
 import loginService from './services/login'
 import noteService from './services/noteService'
@@ -11,6 +11,21 @@ import {
 
 const App = () => {
   const [user, setUser] = useState(null)
+  const [notes, setNotes] = useState([])
+
+  useEffect(() => {
+    noteService.getAll().then(initialNotes => setNotes(initialNotes))
+  }, [])
+
+  const addNote = (note) => {
+    const noteObject = {
+      content: note.content,
+      important: Math.random() < 0.5,
+      id: notes.length + 1,
+    }
+    noteService.create(noteObject)
+      .then(response => setNotes(notes.concat(response)))
+  }
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
@@ -33,7 +48,6 @@ const App = () => {
     }
   }
 
-
   const padding = { padding: 5 }
   return (
     <Router>
@@ -47,7 +61,8 @@ const App = () => {
       </div>
 
       <Routes>
-        <Route path="/notes" element={user ? <Notes /> : <Navigate replace to="/login" />} />
+        <Route path="/notes/:id" element={<Note notes={notes} />} />
+        <Route path="/notes" element={user ? <Notes notes={notes} onAddNote={addNote} /> : <Navigate replace to="/login" />} />
         <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
         <Route path="/" element={<div><p>Welcome!</p></div>} />
       </Routes>
